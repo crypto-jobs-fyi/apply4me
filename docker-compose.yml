@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  apply4me:
+    build: .
+    volumes:
+      - .:/app
+      - ./test-results:/app/test-results
+    environment:
+      - PYTHONUNBUFFERED=1
