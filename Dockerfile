@@ -18,5 +18,8 @@ RUN playwright install --with-deps chromium
 # Copy application code
 COPY . .
 
-# Default command
-CMD ["python", "-m", "pytest", "tests/", "-v"]
+# Set Python path
+ENV PYTHONPATH=/app
+
+# Default command (run unit tests)
+CMD ["python", "-m", "pytest", "tests/test_page_objects.py", "-v"]

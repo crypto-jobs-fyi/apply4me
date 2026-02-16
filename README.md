@@ -102,10 +102,27 @@ with sync_playwright() as p:
 ## Running Tests
 
 The test suite includes:
+
+### Unit Tests (test_page_objects.py)
+- Page Object Model structure verification
+- Method availability tests
+- Mock form filling tests (using local HTML)
+- File attachment verification
+
+These tests run without external dependencies and validate the framework structure.
+
+### Integration Tests (test_greenhouse.py)
 - Field verification tests (checking all required fields exist)
 - Form filling tests (verifying data is correctly entered)
 - File attachment tests (verifying resume upload works)
 - Complete application flow tests
+
+**Note**: Integration tests require access to the actual Greenhouse job posting URL and may fail in restricted network environments.
+
+Run unit tests only:
+```bash
+pytest tests/test_page_objects.py -v
+```
 
 Run all tests:
 ```bash
