@@ -8,7 +8,6 @@ This project specializes in remote job applications to major services like Ashby
 - **Greenhouse Support**: Currently supports Greenhouse application tracking system
 - **Page Object Model**: Clean, maintainable code structure using the Page Object Model design pattern
 - **Dockerized**: Runs in a containerized environment for consistency and portability
-- **Comprehensive Tests**: Full test coverage for form filling and file attachments
 
 ## Current Capabilities
 
@@ -27,14 +26,14 @@ apply4me/
 ├── pages/                  # Page Object Model classes
 │   ├── base_page.py       # Base page with common functionality
 │   └── greenhouse_page.py # Greenhouse-specific page object
-├── tests/                 # Test files
-│   └── test_greenhouse.py # Tests for Greenhouse functionality
 ├── data/                  # Test data files
 │   └── test_resume.pdf   # Sample resume for testing
+├── apply_greenhouse.py    # Example application script
+├── test_application.py    # Standalone Playwright test
 ├── Dockerfile            # Docker image configuration
 ├── docker-compose.yml    # Docker Compose configuration
 ├── requirements.txt      # Python dependencies
-└── pytest.ini           # Pytest configuration
+└── LICENSE               # License file
 ```
 
 ## Getting Started
@@ -51,7 +50,7 @@ apply4me/
    docker-compose build
    ```
 
-2. Run the tests:
+2. Run the application:
    ```bash
    docker-compose run apply4me
    ```
@@ -61,12 +60,21 @@ apply4me/
 1. Install dependencies:
    ```bash
    pip install -r requirements.txt
-   playwright install --with-deps chromium
+   python -m playwright install --with-deps chromium
    ```
 
-2. Run the tests:
+2. Run the application script:
    ```bash
-   pytest tests/ -v
+   python apply_greenhouse.py
+   ```
+
+3. Run the Playwright test:
+   ```bash
+   # Run in headless mode
+   python test_application.py
+
+   # Run in headed mode (to see the browser)
+   python test_application.py --headed
    ```
 
 ## Usage Example
@@ -99,41 +107,6 @@ with sync_playwright() as p:
     browser.close()
 ```
 
-## Running Tests
-
-The test suite includes:
-
-### Unit Tests (test_page_objects.py)
-- Page Object Model structure verification
-- Method availability tests
-- Mock form filling tests (using local HTML)
-- File attachment verification
-
-These tests run without external dependencies and validate the framework structure.
-
-### Integration Tests (test_greenhouse.py)
-- Field verification tests (checking all required fields exist)
-- Form filling tests (verifying data is correctly entered)
-- File attachment tests (verifying resume upload works)
-- Complete application flow tests
-
-**Note**: Integration tests require access to the actual Greenhouse job posting URL and may fail in restricted network environments.
-
-Run unit tests only:
-```bash
-pytest tests/test_page_objects.py -v
-```
-
-Run all tests:
-```bash
-pytest tests/ -v
-```
-
-Run specific test:
-```bash
-pytest tests/test_greenhouse.py::test_fill_greenhouse_application -v
-```
-
 ## Development
 
 ### Adding Support for New Job Boards
@@ -142,17 +115,6 @@ pytest tests/test_greenhouse.py::test_fill_greenhouse_application -v
 2. Inherit from `BasePage`
 3. Define selectors for the job board's form fields
 4. Implement methods to fill each field
-5. Add tests in `tests/`
-
-### Page Object Model
-
-The Page Object Model (POM) design pattern is used to:
-- Separate test logic from page-specific code
-- Make tests more maintainable
-- Reduce code duplication
-- Provide a clear API for interacting with pages
-
-## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 

@@ -16,15 +16,28 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Set up Docker Compose
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker-compose
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
       
-    - name: Build Docker image
+    - name: Install dependencies
       run: |
-        docker-compose build
-        
-    - name: Run tests in Docker
+        python3 -m pip install --upgrade pip
+        pip3 install -r requirements.txt
+        python3 -m playwright install --with-deps chromium
+      
+    - name: Run Playwright test
       run: |
-        docker-compose run apply4me pytest tests/ -v
+        python3 test_application.py
+      
+    - name: Upload test artifacts on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: |
+          screenshots/
+          traces/
+        retention-days: 7

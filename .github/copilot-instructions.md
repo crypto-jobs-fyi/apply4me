@@ -9,17 +9,12 @@ apply4me/
 ├── pages/                      # Page Object Model classes
 │   ├── base_page.py           # Base page with common functionality
 │   └── greenhouse_page.py     # Greenhouse-specific implementation
-├── tests/                     # Test suite
-│   ├── conftest.py           # Pytest configuration
-│   ├── test_page_objects.py  # Unit tests with mock forms
-│   └── test_greenhouse.py    # Integration tests with real URLs
 ├── data/                      # Test data files
 │   └── test_resume.pdf       # Sample resume for testing
 ├── apply_greenhouse.py        # Example application script
 ├── Dockerfile                # Docker image definition
 ├── docker-compose.yml        # Docker Compose configuration
 ├── requirements.txt          # Python dependencies
-├── pytest.ini               # Pytest settings
 └── .github/                  # GitHub configuration
     └── copilot-instructions.md
 ```
@@ -27,21 +22,17 @@ apply4me/
 ## Technology Stack
 - **Language**: Python 3.11+
 - **Browser Automation**: Playwright 1.40.0
-- **Testing**: pytest 7.4.3, pytest-playwright 0.4.3
 - **Containerization**: Docker with Docker Compose
 
-## Build, Test, and Run
+## Build and Run
 
 ### Docker (Recommended)
 ```bash
 # Build the Docker image
 docker-compose build
 
-# Run tests
+# Run application
 docker-compose run apply4me
-
-# Run specific tests
-docker-compose run apply4me pytest tests/test_page_objects.py -v
 ```
 
 ### Local Development
@@ -50,19 +41,10 @@ docker-compose run apply4me pytest tests/test_page_objects.py -v
 pip install -r requirements.txt
 
 # Install Playwright browsers with dependencies
-playwright install --with-deps chromium
+python -m playwright install --with-deps chromium
 
-# Run all tests
-pytest tests/ -v
-
-# Run unit tests only (no network required)
-pytest tests/test_page_objects.py -v
-
-# Run integration tests (requires network access)
-pytest tests/test_greenhouse.py -v
-
-# Run specific test
-pytest tests/test_greenhouse.py::test_fill_greenhouse_application -v
+# Run the application
+python apply_greenhouse.py
 ```
 
 ## Coding Standards
@@ -87,13 +69,9 @@ pytest tests/test_greenhouse.py::test_fill_greenhouse_application -v
 - Greenhouse forms use `job_application[field_name]` naming pattern for input fields
 
 ### Testing Practices
-- Use pytest with pytest-playwright plugin for browser automation testing
-- Separate unit tests (with mock HTML) from integration tests (with real URLs)
-- Unit tests should not require network access
-- Integration tests should verify end-to-end workflows
-- Add tests for any new page objects or methods
-- Test file naming: `test_*.py`
-- Test function naming: `test_*`
+- **ALWAYS** use Playwright's web-first assertions (`expect`) instead of standard Python `assert` for browser interactions where possible.
+- Use Playwright's built-in assertions for reliability.
+- Add validation logic to any new page objects or methods.
 
 ### File Organization
 - Page objects go in `pages/` directory

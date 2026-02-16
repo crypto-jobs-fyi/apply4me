@@ -6,15 +6,15 @@ from playwright.sync_api import Page
 class GreenhousePage(BasePage):
     """Page object for Greenhouse job application forms."""
 
-    # Selectors for form fields
-    FIRST_NAME_INPUT = 'input[name="job_application[first_name]"]'
-    LAST_NAME_INPUT = 'input[name="job_application[last_name]"]'
-    EMAIL_INPUT = 'input[name="job_application[email]"]'
-    PHONE_INPUT = 'input[name="job_application[phone]"]'
-    RESUME_INPUT = 'input[type="file"][name="job_application[resume]"]'
+    # Selectors for form fields - supports both boards.greenhouse.io and job-boards.eu.greenhouse.io
+    FIRST_NAME_INPUT = 'input#first_name, input[name="job_application[first_name]"]'
+    LAST_NAME_INPUT = 'input#last_name, input[name="job_application[last_name]"]'
+    EMAIL_INPUT = 'input#email, input[name="job_application[email]"]'
+    PHONE_INPUT = 'input#phone, input[name="job_application[phone]"]'
+    RESUME_INPUT = 'input#resume, input[type="file"][name="job_application[resume]"]'
     
     # Country/Location field - may vary by job posting
-    COUNTRY_INPUT = 'input[name="job_application[location]"]'
+    COUNTRY_INPUT = 'input#country, input[name="job_application[location]"]'
     
     # Alternative selectors
     LOCATION_INPUT = 'input[autocomplete="address-level2"]'
@@ -34,6 +34,12 @@ class GreenhousePage(BasePage):
             job_url: The URL of the job posting
         """
         self.navigate_to(job_url)
+        # Wait for the network to be idle to ensure React/etc. has finished loading
+        try:
+            self.page.wait_for_load_state("networkidle", timeout=10000)
+        except Exception:
+            # If networkidle fails, just continue
+            pass
 
     def fill_first_name(self, first_name: str):
         """Fill the first name field.
@@ -190,9 +196,13 @@ class GreenhousePage(BasePage):
             True if a file is attached
         """
         # Check if the file input has files
-        file_input = self.page.locator(self.RESUME_INPUT)
-        # If we can get the element, check if it has a value
         try:
-            return file_input.evaluate("el => el.files.length > 0")
+            # Use first() in case multiple elements match
+            return self.page.locator(self.RESUME_INPUT).first.evaluate("el => el.files.length > 0")
         except Exception:
-            return False
+            # Fallback to checking input_value if evaluate fails
+            try:
+                val = self.page.locator(self.RESUME_INPUT).first.input_value()
+                return len(val) > 0
+            except Exception:
+                return False

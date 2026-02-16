@@ -7,17 +7,12 @@ apply4me/
 │   ├── __init__.py            # Package initialization
 │   ├── base_page.py           # Base page with common functionality
 │   └── greenhouse_page.py     # Greenhouse-specific implementation
-├── tests/                     # Test suite
-│   ├── conftest.py           # Pytest configuration
-│   ├── test_page_objects.py  # Unit tests (mock forms)
-│   └── test_greenhouse.py    # Integration tests (real URLs)
 ├── data/                      # Test data
 │   └── test_resume.pdf       # Sample resume for testing
 ├── apply_greenhouse.py        # Example application script
 ├── Dockerfile                # Docker image definition
 ├── docker-compose.yml        # Docker Compose configuration
-├── requirements.txt          # Python dependencies
-└── pytest.ini               # Pytest settings
+└── requirements.txt          # Python dependencies
 ```
 
 ## Architecture
@@ -70,7 +65,7 @@ apply4me/
   - Separation of concerns
   - Reusable code
   - Easy maintenance
-  - Clear API for tests
+  - Clear API for automation scripts
 
 ### Inheritance
 - GreenhousePage extends BasePage
@@ -93,11 +88,6 @@ apply4me/
 - ✅ Verify field values
 - ✅ File attachment verification
 - ✅ Dockerized environment
-- ✅ Comprehensive test suite
-
-## Testing Strategy
-
-### Unit Tests (test_page_objects.py)
 - Test POM structure
 - Test methods with mock HTML forms
 - No external dependencies
@@ -143,7 +133,6 @@ To add support for other job boards:
 2. Extend BasePage
 3. Define selectors for the specific job board
 4. Implement filling methods
-5. Add tests
 
 Example:
 ```python

@@ -45,7 +45,13 @@ class BasePage:
             selector: CSS selector for the file input
             file_path: Path to the file to upload
         """
-        self.page.set_input_files(selector, file_path)
+        # Ensure the file exists before attempting to upload
+        import os
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"File not found: {file_path}")
+            
+        # Use locator and set_input_files for better reliability
+        self.page.locator(selector).first.set_input_files(file_path)
 
     def wait_for_element(self, selector: str, timeout: int = 30000):
         """Wait for an element to be visible.

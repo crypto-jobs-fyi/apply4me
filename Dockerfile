@@ -12,5 +12,5 @@ COPY . .
 # Set Python path
 ENV PYTHONPATH=/app
 
-# Default command (run unit tests)
-CMD ["python", "-m", "pytest", "tests/test_page_objects.py", "-v"]
+# Default command
+CMD ["python", "apply_greenhouse.py"]
